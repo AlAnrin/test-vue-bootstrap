@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar toggleable="lg" type="dark" variant="primary">
       <b-navbar-brand href="#">Anrin</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -36,17 +36,24 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <hello-world msg="Some teeeest"></hello-world>
+    <test msg="Some teeeest"></test>
   </div>
 </template>
 
 <script>
-  import HelloWorld from "@/components/Test";
+  import Test from "@/components/Test";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Test
   }
 }
 </script>
+
+<style lang="scss">
+  @import "ex.variables";
+  @import "styles.module";
+  @import '~bootstrap/scss/bootstrap.scss';
+  @import '~bootstrap-vue/src/index.scss';
+</style>

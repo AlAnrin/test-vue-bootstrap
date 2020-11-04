@@ -1,9 +1,9 @@
 <template>
   <div class="hello">
 
-    <b-card title="Card Title" no-body>
+    <b-card title="Card Title" no-body variant="dark">
       <b-card-header header-tag="nav">
-        <b-nav card-header tabs justified >
+        <b-nav card-header tabs justified>
           <b-nav-item active>Active</b-nav-item>
           <b-nav-item>Link</b-nav-item>
           <b-nav-item>Another Link</b-nav-item>
@@ -16,7 +16,7 @@
           {{msg}}
         </b-card-text>
 
-        <b-button variant="primary">Go somewhere</b-button>
+        <b-button variant="light">Go somewhere</b-button>
       </b-card-body>
     </b-card>
   </div>
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Test',
   props: {
     msg: String
   }

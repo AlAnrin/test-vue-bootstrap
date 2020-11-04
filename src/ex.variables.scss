@@ -1,0 +1,25 @@
+$indigo-light: #a37aea;
+$purple-dark: #5300ad;
+
+@import '../node_modules/bootstrap/scss/bootstrap';
+@import '../node_modules/bootstrap-vue/src/index.scss';
+
+$primary: $purple;
+$secondary: $gray-600;
+$success: $green;
+$info: $teal;
+$warning: $yellow;
+$danger: $red;
+$light: $indigo-light;
+$dark: $purple-dark;
+
+$theme-colors: (
+        'primary': $primary,
+        'secondary': $secondary,
+        'success': $success,
+        'info': $info,
+        'warning': $warning,
+        'danger': $danger,
+        'light': $light,
+        'dark': $dark
+);
