@@ -38,7 +38,7 @@
     </b-navbar>
     <b-button variant="light" @click="getData">GetData</b-button>
     <b-button variant="warning" @click="rewriteData">rewriteData</b-button>
-    <b-button variant="success" @click="postData">postData</b-button>
+    <b-button variant="success" @click="putData">putData</b-button>
     <test v-bind:msg="dataHome" v-if="dataHome != null"></test>
   </div>
 </template>
@@ -79,9 +79,9 @@ export default {
       let result = await response.json();
       this.dataHome = result.message;
     },
-    async postData() {
+    async putData() {
       let response = await fetch(`${this.baseUrl}/write`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
         },
