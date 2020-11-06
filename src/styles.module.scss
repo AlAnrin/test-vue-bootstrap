@@ -3,5 +3,33 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #aa3838;
+}
+
+.authorization-card {
+  width: calc(100vw / 3);
+  margin: calc(100vh / 3) auto auto;
+}
+@media screen and (max-width: 1200px) {
+  .authorization-card {
+    width: calc(100vw / 2.5);
+    margin: calc(100vh / 3) auto auto;
+  }
+}
+@media screen and (max-width: 800px) {
+  .authorization-card {
+    width: calc(100vw / 2);
+    margin: calc(100vh / 3.5) auto auto;
+  }
+}
+@media screen and (max-width: 630px) {
+  .authorization-card {
+    width: calc(100vw / 1.5);
+    margin: calc(100vh / 4) auto auto;
+  }
+}
+@media screen and (max-width: 470px) {
+  .authorization-card {
+    width: auto;
+    margin: 15px 15px auto;
+  }
 }

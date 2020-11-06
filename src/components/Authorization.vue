@@ -1,14 +1,15 @@
 <template>
     <div>
-        <b-card title="Авторизация" no-body variant="light">
+        <b-card title="Авторизация" class="authorization-card" no-body variant="light">
             <b-card-header>
-
+                Вход в систему
             </b-card-header>
 
             <b-card-body class="text-center">
                 <b-card-text>
                     <b-form-input v-model="userName" placeholder="Логин"></b-form-input>
-                    <b-form-input v-model="password" type="password" placeholder="Пароль"></b-form-input>
+                    <b-form-input v-model="password" @keydown.enter.prevent = "login"
+                                  type="password" placeholder="Пароль"></b-form-input>
                 </b-card-text>
 
                 <b-button variant="light" @click="login">Войти</b-button>
@@ -50,5 +51,7 @@
 </script>
 
 <style scoped>
-
+    input {
+        margin-bottom: 2px;
+    }
 </style>
