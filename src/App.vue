@@ -2,13 +2,20 @@
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="primary">
       <b-navbar-brand href="#">Anrin</b-navbar-brand>
+      <b-nav-text right>
+        {{fio}}
+      </b-nav-text>
     </b-navbar>
     <authorization v-if="token == null"></authorization>
+    <directories v-if="token != null"></directories>
+    <b-button @click="getData">getData</b-button>
   </div>
 </template>
 
 <script>
   import Authorization from "./components/Authorization";
+  import Directories from "./components/Directories";
+  import {mapActions} from "vuex";
 
   export default {
     name: 'App',
@@ -18,9 +25,13 @@
       }
     },
     components: {
-      Authorization
+      Authorization,
+      Directories
     },
     computed: {
+      fio() {
+        return this.$store.state.fio
+      },
       baseUrl() {
         return this.$store.state.baseUrl
       },
@@ -29,11 +40,19 @@
       }
     },
     methods: {
+      ...mapActions([
+        'changeData'
+      ]),
       async getData() {
-        const url = `${this.baseUrl}/home`
-        const api_call = await fetch(url);
+        const url = `${this.baseUrl}/files`
+        const response = await fetch(url, {
+          headers: {
+            "authorization": this.token
+          }
+        });
 
-        this.dataHome = await api_call.json();
+        const data = await response.json();
+        this.changeData(data);
       },
       async rewriteData() {
         let response = await fetch(`${this.baseUrl}/rewrite`, {

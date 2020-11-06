@@ -36,7 +36,8 @@
         },
         methods: {
             ...mapActions([
-                'changeToken'
+                'changeToken',
+                'changeFio'
             ]),
             async login() {
                 let response = await fetch(`${this.baseUrl}/auth?login=${this.userName}&password=${this.password}`, {
@@ -44,6 +45,7 @@
                 });
                 let result = await response.json();
                 this.changeToken(result.token);
+                this.changeFio(result.fio);
                 console.log(result.token)
             }
         }
