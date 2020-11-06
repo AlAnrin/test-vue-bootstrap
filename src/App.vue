@@ -2,13 +2,12 @@
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="primary">
       <b-navbar-brand href="#">Anrin</b-navbar-brand>
-      <b-nav-text right>
+      <b-nav-text variant="primary" right>
         {{fio}}
       </b-nav-text>
     </b-navbar>
     <authorization v-if="token == null"></authorization>
     <directories v-if="token != null"></directories>
-    <b-button @click="getData">getData</b-button>
   </div>
 </template>
 
@@ -43,17 +42,6 @@
       ...mapActions([
         'changeData'
       ]),
-      async getData() {
-        const url = `${this.baseUrl}/files`
-        const response = await fetch(url, {
-          headers: {
-            "authorization": this.token
-          }
-        });
-
-        const data = await response.json();
-        this.changeData(data);
-      },
       async rewriteData() {
         let response = await fetch(`${this.baseUrl}/rewrite`, {
           method: 'POST',

@@ -1,5 +1,8 @@
 <template>
     <div>
+        <b-alert :show="isWrong" variant="danger" dismissible>
+            Неправильное имя пользователя или пароль!
+        </b-alert>
         <b-card title="Авторизация" class="authorization-card" no-body variant="light">
             <b-card-header>
                 Вход в систему
@@ -26,7 +29,8 @@
         data() {
             return {
                 userName: '',
-                password: ''
+                password: '',
+                isWrong: false
             }
         },
         computed: {
@@ -37,16 +41,22 @@
         methods: {
             ...mapActions([
                 'changeToken',
+                'updateData',
                 'changeFio'
             ]),
             async login() {
                 let response = await fetch(`${this.baseUrl}/auth?login=${this.userName}&password=${this.password}`, {
                     method: 'POST'
                 });
-                let result = await response.json();
-                this.changeToken(result.token);
-                this.changeFio(result.fio);
-                console.log(result.token)
+                let result = await response;
+                if (result.status === 200) {
+                    const json = await response.json();
+                    this.changeToken(json.token).then(() => this.updateData());
+                    this.changeFio(json.fio);
+                }
+                if (result.status === 404) {
+                    this.isWrong = true;
+                }
             }
         }
     }

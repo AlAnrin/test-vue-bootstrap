@@ -1,10 +1,16 @@
+button, input {
+  outline: none !important;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
-
+.navbar-expand-lg {
+  justify-content: space-between !important;
+}
 .authorization-card {
   width: calc(100vw / 3);
   margin: calc(100vh / 3) auto auto;
