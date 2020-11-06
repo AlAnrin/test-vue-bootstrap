@@ -1,5 +1,5 @@
 <template>
-    <div class="row wrapper">
+    <div class="wrapper">
         <b-list-group class="transition-width-list-left">
             <b-list-group-item v-for="fol in data"
                                v-bind:key="fol.id"
@@ -46,6 +46,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .wrapper {
+        display: flex;
+        flex-direction: row;
+    }
     .item-list {
         text-overflow: ellipsis;
         white-space: nowrap;
