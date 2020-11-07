@@ -7,7 +7,7 @@
                                @click="() => selectDirectory(fol)"
                                class="item-list"
                                button>
-                {{fol.name_part}}
+                <b>{{fol.name_part}}</b>
             </b-list-group-item>
         </b-list-group>
         <pages class="content"></pages>
@@ -47,6 +47,7 @@
 </script>
 
 <style lang="scss" scoped>
+    @import "../ex.variables";
     .wrapper {
         display: flex;
         flex-direction: row;
@@ -56,10 +57,20 @@
         white-space: nowrap;
         overflow: hidden;
     }
+    .list-group-item.active {
+        background: $secondary !important;
+        border: 1px solid $secondary !important;
+    }
+    .list-group-item:hover {
+        color: $dark-color;
+        background: $secondary-light !important;
+        border: 1px solid $secondary-light !important;
+    }
     @media screen and (min-width: 1000px) {
         .transition-width-list-left {
             width: calc(100vw/6);
             position: absolute;
+            border: 1px solid $indigo-light;
         }
         .content {
             width: calc(5 * 100vw/6);
@@ -71,6 +82,9 @@
         .transition-width-list-left {
             width: 100px;
             position: absolute;
+            height: calc(100vh - 60px);
+            background: white;
+            border: 1px solid $indigo-light;
         }
         .transition-width-list-left:hover {
             width: 250px;
@@ -86,6 +100,9 @@
         .transition-width-list-left {
             width: 80px;
             position: absolute;
+            height: calc(100vh - 60px);
+            background: white;
+            border: 1px solid $indigo-light;
         }
         .transition-width-list-left:hover {
             width: 250px;
@@ -101,6 +118,9 @@
         .transition-width-list-left {
             width: 70px;
             position: absolute;
+            height: calc(100vh - 60px);
+            background: white;
+            border: 1px solid $indigo-light;
         }
         .transition-width-list-left:hover {
             width: 200px;
@@ -121,6 +141,9 @@
         .transition-width-list-left {
             position: relative;
             width: 100%;
+            height: calc(100vh - 60px);
+            background: white;
+            border: 1px solid $indigo-light;
         }
         .transition-width-list-left:hover {
             width: inherit;
