@@ -34,12 +34,13 @@
         },
         methods: {
             ...mapActions([
-                'changeCurrentDirectory'
+                'changeCurrentDirectory',
+                'updateFiles'
             ]),
             selectDirectory(fol) {
                 if (this.currentDirectory.id === fol.id)
                     this.changeCurrentDirectory({id: -1})
-                else this.changeCurrentDirectory(fol)
+                else this.changeCurrentDirectory(fol).then(() => this.updateFiles())
             }
         }
     }

@@ -31,12 +31,13 @@
         },
         methods: {
             ...mapActions([
-                'changeCurrentFile'
+                'changeCurrentFile',
+                'loadFile'
             ]),
             selectFile(file) {
                 if (this.currentFile.id === file.id)
                     this.changeCurrentFile({id: -1})
-                else this.changeCurrentFile(file)
+                else this.changeCurrentFile(file).then(() => this.loadFile())
             }
         }
     }

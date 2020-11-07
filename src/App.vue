@@ -7,13 +7,15 @@
       </b-nav-text>
     </b-navbar>
     <authorization v-if="token == null"></authorization>
-    <directories v-if="token != null"></directories>
+    <directories v-if="token != null && currentFile.id === -1"></directories>
+    <page v-if="currentFile.id !== -1"></page>
   </div>
 </template>
 
 <script>
   import Authorization from "./components/Authorization";
   import Directories from "./components/Directories";
+  import Page from './components/Page';
   import {mapActions} from "vuex";
 
   export default {
@@ -25,7 +27,8 @@
     },
     components: {
       Authorization,
-      Directories
+      Directories,
+      Page
     },
     computed: {
       fio() {
@@ -36,6 +39,9 @@
       },
       token() {
         return this.$store.state.token;
+      },
+      currentFile() {
+        return this.$store.state.currentFile
       }
     },
     methods: {

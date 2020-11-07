@@ -29,6 +29,14 @@ export default new Vuex.Store({
             commit('updateData');
             console.log
         },
+        async updateFiles({ commit }) {
+            commit('updateFiles');
+            console.log
+        },
+        async loadFile({ commit }) {
+            commit('loadFile')
+            console.log
+        },
         changeData({ commit }, lists) {
             commit('changeData', {
                 lists
@@ -65,7 +73,7 @@ export default new Vuex.Store({
             state.currentFile = currFile
         },
         async updateData(state) {
-            const url = `${state.baseUrl}/files`
+            const url = `${state.baseUrl}/dirs`
             const response = await fetch(url, {
                 headers: {
                     "authorization": state.token
@@ -74,6 +82,33 @@ export default new Vuex.Store({
 
             const data = await response.json();
             state.data = [...data.data];
+            console.log
+        },
+        async updateFiles(state) {
+            const dir = state.currentDirectory;
+            const url = `${state.baseUrl}/dirs/files?dir_id=${dir.id}`
+            const response = await fetch(url, {
+                headers: {
+                    "authorization": state.token
+                }
+            });
+
+            const data = await response.json();
+            state.currentDirectory.files = [...data.data];
+            console.log
+        },
+        async loadFile(state) {
+            const dir = state.currentDirectory;
+            const file = state.currentFile;
+            const url = `${state.baseUrl}/dirs/files?dir_id=${dir.id}&id=${file.id}`
+            const response = await fetch(url, {
+                headers: {
+                    "authorization": state.token
+                }
+            });
+
+            const data = await response.json();
+            state.currentFile.content = data.content;
             console.log
         },
     },
