@@ -55,6 +55,14 @@ export default new Vuex.Store({
             });
             console.log
         },
+        createFile({ commit }) {
+            commit('createFile')
+            console.log
+        },
+        deleteFile({ commit }, file) {
+            commit('deleteFile', file);
+            console.log
+        }
     },
     mutations: {
         changeFio(state, { fio }) {
@@ -111,6 +119,28 @@ export default new Vuex.Store({
             state.currentFile.content = data.content;
             console.log
         },
+        async createFile(state) {
+            const dir = state.currentDirectory;
+            let response = await fetch(`${this.state.baseUrl}/dirs/files?dir=${dir.id}`, {
+                method: 'POST',
+                headers: {
+                    "authorization": state.token
+                }
+            });
+            await response.json();
+            console.log
+        },
+        async deleteFile(state, file) {
+            const dir = state.currentDirectory;
+            let response = await fetch(`${this.state.baseUrl}/dirs/files?dir=${dir.id}&id=${file.id}`, {
+                method: 'DELETE',
+                headers: {
+                    "authorization": state.token
+                }
+            });
+            await response.json();
+            console.log
+        }
     },
     plugins: [
         // store => {
