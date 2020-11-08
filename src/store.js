@@ -55,6 +55,14 @@ export default new Vuex.Store({
             });
             console.log
         },
+        createDir({ commit }) {
+            commit('createDir')
+            console.log
+        },
+        deleteDir({ commit }) {
+            commit('deleteDir')
+            console.log
+        },
         createFile({ commit }) {
             commit('createFile')
             console.log
@@ -119,10 +127,31 @@ export default new Vuex.Store({
             state.currentFile.content = data.content;
             console.log
         },
+        async createDir(state) {
+            let response = await fetch(`${this.state.baseUrl}/dirs`, {
+                method: 'POST',
+                headers: {
+                    "authorization": state.token
+                }
+            });
+            await response.json();
+            console.log
+        },
         async createFile(state) {
             const dir = state.currentDirectory;
             let response = await fetch(`${this.state.baseUrl}/dirs/files?dir=${dir.id}`, {
                 method: 'POST',
+                headers: {
+                    "authorization": state.token
+                }
+            });
+            await response.json();
+            console.log
+        },
+        async deleteDir(state) {
+            const dir = state.currentDirectory;
+            let response = await fetch(`${this.state.baseUrl}/dirs?dir=${dir.id}`, {
+                method: 'DELETE',
                 headers: {
                     "authorization": state.token
                 }

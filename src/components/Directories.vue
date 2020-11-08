@@ -1,6 +1,16 @@
 <template>
     <div class="wrapper">
         <b-list-group class="transition-width-list-left">
+            <b-button-toolbar class="toolbar-row">
+                <b-button-group class="mr-1">
+                    <b-button title="Add" @click="addPart">
+                        <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
+                    </b-button>
+                    <b-button title="Refresh" @click="updatePart">
+                        <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
+                    </b-button>
+                </b-button-group>
+            </b-button-toolbar>
             <b-list-group-item v-for="fol in data"
                                v-bind:key="fol.id"
                                :active="currentDirectory.id === fol.id"
@@ -14,8 +24,13 @@
         <b-card v-if="currentDirectory.id !== -1"
                 class="content">
             <b-card-header>
-                <h3>{{currentDirectory.name_part}}</h3>
-                <b-form-input v-if="isRedactPart" :value="currentDirectory.name_part"/>
+                <div class="row-list">
+                    <h3>{{currentDirectory.name_part}}</h3>
+                    <b-form-input v-if="isRedactPart" :value="currentDirectory.name_part"/>
+                    <b-icon @click="removePart"
+                            class="h3 rounded-circle delete-page-item"
+                            icon="folder-minus" aria-hidden="true"></b-icon>
+                </div>
             </b-card-header>
             <b-card-text>
                 <b-button-toolbar class="toolbar-row">
@@ -72,11 +87,25 @@
             ...mapActions([
                 'changeCurrentDirectory',
                 'changeCurrentFile',
+                'updateData',
                 'updateFiles',
                 'loadFile',
+                'createDir',
                 'createFile',
-                'deleteFile'
+                'deleteFile',
+                'deleteDir'
             ]),
+            addPart() {
+                this.createDir().then(() => this.updateData())
+            },
+            removePart() {
+                this.deleteDir()
+                    .then(() => this.updateData())
+                    .then(() => this.changeCurrentDirectory({id: -1}));
+            },
+            updatePart() {
+
+            },
             updateFilesToDir() {
                 this.updateFiles()
             },
