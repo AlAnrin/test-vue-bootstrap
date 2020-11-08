@@ -59,6 +59,10 @@ export default new Vuex.Store({
             commit('createDir')
             console.log
         },
+        updateDir({ commit }, name) {
+            commit('updateDir', name)
+            console.log
+        },
         deleteDir({ commit }) {
             commit('deleteDir')
             console.log
@@ -144,6 +148,21 @@ export default new Vuex.Store({
                 headers: {
                     "authorization": state.token
                 }
+            });
+            await response.json();
+            console.log
+        },
+        async updateDir(state, name) {
+            const dir = state.currentDirectory;
+            let response = await fetch(`${this.state.baseUrl}/dirs?dir=${dir.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    "authorization": state.token
+                },
+                body: JSON.stringify({
+                    "name": name
+                })
             });
             await response.json();
             console.log

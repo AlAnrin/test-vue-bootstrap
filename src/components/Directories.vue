@@ -6,7 +6,7 @@
                     <b-button title="Add" @click="addPart">
                         <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                     </b-button>
-                    <b-button title="Refresh" @click="updatePart">
+                    <b-button title="Refresh" @click="refreshParts">
                         <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
                     </b-button>
                 </b-button-group>
@@ -25,8 +25,12 @@
                 class="content">
             <b-card-header>
                 <div class="row-list">
-                    <h3>{{currentDirectory.name_part}}</h3>
-                    <b-form-input v-if="isRedactPart" :value="currentDirectory.name_part"/>
+                    <h3 v-if="!isRedactPart" >{{currentDirectory.name_part}}</h3>
+                    <b-form-input v-else
+                                  tabindex="0"
+                                  #redactPart
+                                  @keyup="event => updatePart(event)"
+                                  v-model="currentDirectory.name_part"/>
                     <b-icon @click="removePart"
                             class="h3 rounded-circle delete-page-item"
                             icon="folder-minus" aria-hidden="true"></b-icon>
@@ -68,7 +72,7 @@
         name: "Directories",
         data() {
             return {
-                isRedactPart: false
+                isRedactPart: true
             }
         },
         computed: {
@@ -92,9 +96,13 @@
                 'loadFile',
                 'createDir',
                 'createFile',
+                'updateDir',
                 'deleteFile',
                 'deleteDir'
             ]),
+            changeRedact() {
+                this.isRedactPart = !this.isRedactPart;
+            },
             addPart() {
                 this.createDir().then(() => this.updateData())
             },
@@ -103,8 +111,13 @@
                     .then(() => this.updateData())
                     .then(() => this.changeCurrentDirectory({id: -1}));
             },
-            updatePart() {
-
+            updatePart(event) {
+                if (event.key === 'Enter') {
+                    this.updateDir(this.currentDirectory.name_part)
+                }
+            },
+            refreshParts() {
+                this.updateData()
             },
             updateFilesToDir() {
                 this.updateFiles()
