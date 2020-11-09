@@ -71,6 +71,14 @@ export default new Vuex.Store({
             commit('createFile')
             console.log
         },
+        renameFile({ commit }, name) {
+            commit('updateFile', name)
+            console.log
+        },
+        updateFile({ commit }, content) {
+            commit('updateFile', content)
+            console.log
+        },
         deleteFile({ commit }, file) {
             commit('deleteFile', file);
             console.log
@@ -162,6 +170,38 @@ export default new Vuex.Store({
                 },
                 body: JSON.stringify({
                     "name": name
+                })
+            });
+            await response.json();
+            console.log
+        },
+        async renameFile(state, name) {
+            const dir = state.currentDirectory;
+            const file = state.currentFile;
+            let response = await fetch(`${this.state.baseUrl}/dirs/files?dir=${dir.id}&id=${file.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    "authorization": state.token
+                },
+                body: JSON.stringify({
+                    "name": name
+                })
+            });
+            await response.json();
+            console.log
+        },
+        async updateFile(state, content) {
+            const dir = state.currentDirectory;
+            const file = state.currentFile;
+            let response = await fetch(`${this.state.baseUrl}/dirs/files?dir=${dir.id}&id=${file.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    "authorization": state.token
+                },
+                body: JSON.stringify({
+                    "content": content
                 })
             });
             await response.json();

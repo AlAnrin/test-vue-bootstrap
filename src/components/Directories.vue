@@ -3,10 +3,10 @@
         <b-list-group class="transition-width-list-left">
             <b-button-toolbar class="toolbar-row">
                 <b-button-group class="mr-1">
-                    <b-button title="Add" @click="addPart">
+                    <b-button v-b-tooltip.hover title="Создать папку" @click="addPart">
                         <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                     </b-button>
-                    <b-button title="Refresh" @click="refreshParts">
+                    <b-button v-b-tooltip.hover title="Обновить папку" @click="refreshParts">
                         <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
                     </b-button>
                 </b-button-group>
@@ -31,7 +31,7 @@
                                   #redactPart
                                   @keyup="event => updatePart(event)"
                                   v-model="currentDirectory.name_part"/>
-                    <b-icon @click="removePart"
+                    <b-icon @click="removePart" v-b-tooltip.hover title="Удалить папку"
                             class="h3 rounded-circle delete-page-item"
                             icon="folder-minus" aria-hidden="true"></b-icon>
                 </div>
@@ -39,10 +39,10 @@
             <b-card-text>
                 <b-button-toolbar class="toolbar-row">
                     <b-button-group class="mr-1">
-                        <b-button title="Add" @click="addFile">
+                        <b-button @click="addFile" v-b-tooltip.hover title="Новый файл">
                             <b-icon icon="journal-plus" aria-hidden="true"></b-icon>
                         </b-button>
-                        <b-button title="Refresh" @click="updateFilesToDir">
+                        <b-button @click="updateFilesToDir" v-b-tooltip.hover title="Обновить">
                             <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
                         </b-button>
                     </b-button-group>
@@ -55,6 +55,7 @@
                             <b-button class="pages-list-item"
                                       @click="() => selectFile(file)">{{file.filename}}</b-button>
                             <b-icon @click="() => removeFile(file)"
+                                    v-b-tooltip.hover title="Удалить файл"
                                     class="h3 rounded-circle delete-page-item"
                                     icon="journal-minus" aria-hidden="true"></b-icon>
                         </div>
@@ -147,6 +148,10 @@
     .row-list {
         display: flex;
         flex-direction: row;
+    }
+    .toolbar-row {
+        margin: 10px;
+        width: calc(100vw - 25px);
     }
     .wrapper {
         display: flex;

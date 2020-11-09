@@ -16,7 +16,6 @@
   import Authorization from "./components/Authorization";
   import Directories from "./components/Directories";
   import Page from './components/Page';
-  import {mapActions} from "vuex";
 
   export default {
     name: 'App',
@@ -42,33 +41,6 @@
       },
       currentFile() {
         return this.$store.state.currentFile
-      }
-    },
-    methods: {
-      ...mapActions([
-        'changeData'
-      ]),
-      async rewriteData() {
-        let response = await fetch(`${this.baseUrl}/rewrite`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-          },
-          body: JSON.stringify({newData: "dataaaaaaa"})
-        });
-        let result = await response.json();
-        this.dataHome = result.message;
-      },
-      async putData() {
-        let response = await fetch(`${this.baseUrl}/write`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-          },
-          body: JSON.stringify({newAddingData: "NEWWWWWWWWWWWWWWWWWWWWWWWW"})
-        });
-        let result = await response.json();
-        this.dataHome = result.message;
       }
     }
   }
