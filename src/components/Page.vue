@@ -9,10 +9,12 @@
         </div>
         <b-button-toolbar class="toolbar-row">
             <b-button-group class="mr-1">
-                <b-button @click="undo" v-b-tooltip.hover title="Отменить"
-                          v-bind:disabled="index <= 0">
-                    <b-icon icon="arrow90deg-left" aria-hidden="true"></b-icon>
-                </b-button>
+                <div v-b-tooltip.hover title="Отменить">
+                    <b-button @click="undo"
+                              v-bind:disabled="index <= 0">
+                        <b-icon icon="arrow90deg-left" aria-hidden="true"></b-icon>
+                    </b-button>
+                </div>
             </b-button-group>
             <b-button-group>
                 <b-button @click="() => changeTextAlign('left')">
@@ -29,13 +31,13 @@
                 <b-button title="Bold" @click="toBold">
                     <b-icon icon="type-bold" aria-hidden="true"></b-icon>
                 </b-button>
-                <b-button title="Italic">
+                <b-button title="Italic" @click="toItalic">
                     <b-icon icon="type-italic" aria-hidden="true"></b-icon>
                 </b-button>
-                <b-button title="Underline">
+                <b-button title="Underline" @click="toUnderline">
                     <b-icon icon="type-underline" aria-hidden="true"></b-icon>
                 </b-button>
-                <b-button title="Strikethrough">
+                <b-button title="Strikethrough" @click="toStrikethrough">
                     <b-icon icon="type-strikethrough" aria-hidden="true"></b-icon>
                 </b-button>
             </b-button-group>
@@ -83,7 +85,7 @@
                 this.updateFile(innerHtml)
             },
             changeFileName(event) {
-                if (event.key === 'Enter')
+                if (event.key === "Enter")
                     this.renameFile(this.currentFile.filename)
             },
             getCaretCharacterOffsetWithin(element) {
@@ -116,38 +118,80 @@
             },
             getPositionInHTMLByTextCurr(html, text, start) {
                 let j = 0;
-                for (let i = 0; i < text.length; i++) {
-                    if (i < start) {
+                const old = start;
+                for (let i = 0; i < text.length && j < html.length; i++) {
+                    if (i <= old && j <= start) {
+                        if (text[i] === '\n' && html[j] === ' ') {
+                            i++;
+                            j++;
+                        }
                         const t = text[i];
                         const h = html[j];
                         if (t !== h) {
-                            start++;
-                            i--;
-                        }
-                        j++;
+                            if (h === '<') {
+                                if (html[j + 1] === 'b'
+                                    || html[j + 1] === 'd'
+                                    || html[j + 1] === 'i'
+                                    || html[j + 1] === 's'
+                                    || html[j + 1] === 'u'
+                                    || html[j + 1] === '/') {
+                                    while (html[j] !== '>' && j < html.length) {
+                                        start++;
+                                        j++;
+                                    }
+                                    start++;
+                                    j++;
+                                    i--;
+                                }
+                            }
+                        } else j++;
                     }
                 }
                 return start;
             },
-            toBold() {
+            fixPositions() {
                 const editableDiv = document.getElementById('editableDiv');
                 const innerHtml = editableDiv.innerHTML;
-                console.log(innerHtml)
                 const innerText = editableDiv.innerText;
-                console.log(innerText)
                 const curr = this.getCaretCharacterOffsetWithin(editableDiv);
-                console.log(curr.start);
-                console.log(curr.end);
-                const sel = window.getSelection().toString();
+                const sel = window.getSelection();
+                const selStr = sel.toString();
                 const trueStart = this.getPositionInHTMLByTextCurr(innerHtml, innerText, curr.start);
                 const start = innerHtml.substring(0, trueStart);
                 console.log(start);
-                const end = innerHtml.substring(trueStart + sel.length);
+                const end = innerHtml.substring(trueStart + selStr.length);
                 console.log(end);
+                return {start, end, selStr};
+            },
+            toHistory() {
+                this.story.push(this.currentFile.content);
+                this.index++;
+            },
+            toBold() {
+                const {start, end, selStr} = this.fixPositions();
+                this.toHistory();
+                this.currentFile.content = start + '<b>' + selStr + '</b>' + end;
+            },
+            toItalic() {
+                const {start, end, selStr} = this.fixPositions();
+                this.toHistory();
+                this.currentFile.content = start + '<i>' + selStr + '</i>' + end;
+            },
+            toUnderline() {
+                const {start, end, selStr} = this.fixPositions();
+                this.toHistory();
+                this.currentFile.content = start + '<u>' + selStr + '</u>' + end;
+            },
+            toStrikethrough() {
+                const {start, end, selStr} = this.fixPositions();
+                this.toHistory();
+                this.currentFile.content = start + '<s>' + selStr + '</s>' + end;
             },
             changeTextAlign(type) {
-                const editableDiv = document.getElementById('editableDiv');
-                editableDiv.style.textAlign = type;
+                const {start, end, selStr} = this.fixPositions();
+                this.toHistory();
+                this.currentFile.content = '<div>' + start + '</div>' + `<div style="text-align: ${type}">`
+                    + selStr + '</div>' + '<div>' + end + '</div>';
             }
         }
     }

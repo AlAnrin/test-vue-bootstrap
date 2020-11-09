@@ -72,7 +72,7 @@ export default new Vuex.Store({
             console.log
         },
         renameFile({ commit }, name) {
-            commit('updateFile', name)
+            commit('renameFile', name)
             console.log
         },
         updateFile({ commit }, content) {
