@@ -121,10 +121,13 @@
                 const old = start;
                 for (let i = 0; i < text.length && j < html.length; i++) {
                     if (i <= old && j <= start) {
-                        if (text[i] === '\n' && html[j] === ' ') {
-                            i++;
-                            j++;
-                        }
+                        // if (text[i] === '\n') { //TODO: whyyyyyy
+                        //     if (html[j] === ' ' && text[i+1] !== ' ') {
+                        //         j++;
+                        //         // start++;
+                        //     }
+                        //     i++;
+                        // }
                         const t = text[i];
                         const h = html[j];
                         if (t !== h) {
@@ -152,7 +155,7 @@
             fixPositions() {
                 const editableDiv = document.getElementById('editableDiv');
                 const innerHtml = editableDiv.innerHTML;
-                const innerText = editableDiv.innerText;
+                const innerText = editableDiv.innerText.replace('\n', ' ');
                 const curr = this.getCaretCharacterOffsetWithin(editableDiv);
                 const sel = window.getSelection();
                 const selStr = sel.toString();
@@ -167,10 +170,51 @@
                 this.story.push(this.currentFile.content);
                 this.index++;
             },
+            checkOpenTag(str) {
+                const openTags = [];
+                for (let i = 0; i < str.length; i++) {
+                    if (str[i] === '<' && str[i+1] !== '/'){
+                        i++;
+                        let tag = '';
+                        while (str[i] !== '>' && i < str.length) {
+                            tag += str[i];
+                            i++;
+                        }
+                        openTags.push({
+                            tag: tag,
+                            i: i
+                        });
+                    }
+                    if (str[i] === '<' && str[i+1] === '/'){
+                        openTags.pop();
+                        i += 4;
+                    }
+                }
+                return openTags;
+            },
             toBold() {
-                const {start, end, selStr} = this.fixPositions();
+                let {start, end, selStr} = this.fixPositions();
+                // const openTags = this.checkOpenTag(start);
+                // let lasOpenTag;
+                // if (openTags.length !== 0 && openTags[openTags.length - 1].tag === 'b') {
+                //     lasOpenTag = openTags[openTags.length - 1];
+                //     if ((lasOpenTag.i + lasOpenTag.tag.length) === start.length) {
+                //         const arr = start.split('');
+                //         arr.length = arr.length - ( 2 + lasOpenTag.tag.length);
+                //         start = arr.join('')
+                //         end = `<${lasOpenTag.tag}>${end}`;
+                //     }
+                //     else {
+                //         start += '</' + lasOpenTag.tag + '>';
+                //         end = `<${lasOpenTag.tag}>${end}`;
+                //     }
+                // }
                 this.toHistory();
-                this.currentFile.content = start + '<b>' + selStr + '</b>' + end;
+                // if (lasOpenTag) {
+                //     this.currentFile.content = start + selStr.trim() + end;
+                // }
+                // else
+                    this.currentFile.content = start + '<b>' + selStr + '</b>' + end;
             },
             toItalic() {
                 const {start, end, selStr} = this.fixPositions();
