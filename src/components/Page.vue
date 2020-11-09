@@ -42,7 +42,6 @@
         </b-button-toolbar>
         <div id="editableDiv" class="editable textarea"
              v-html="currentFile.content"
-             @keyup="event => checkEnter(event)"
              contenteditable="true">
         </div>
     </div>
@@ -87,11 +86,64 @@
                 if (event.key === 'Enter')
                     this.renameFile(this.currentFile.filename)
             },
+            getCaretCharacterOffsetWithin(element) {
+                var start = 0;
+                var end = 0;
+                var doc = element.ownerDocument || element.document;
+                var win = doc.defaultView || doc.parentWindow;
+                var sel;
+                if (typeof win.getSelection != "undefined") {
+                    sel = win.getSelection();
+                    if (sel.rangeCount > 0) {
+                        var range = win.getSelection().getRangeAt(0);
+                        var preCaretRange = range.cloneRange();
+                        preCaretRange.selectNodeContents(element);
+                        preCaretRange.setEnd(range.startContainer, range.startOffset);
+                        start = preCaretRange.toString().length;
+                        preCaretRange.setEnd(range.endContainer, range.endOffset);
+                        end = preCaretRange.toString().length;
+                    }
+                } else if ( (sel = doc.selection) && sel.type != "Control") {
+                    var textRange = sel.createRange();
+                    var preCaretTextRange = doc.body.createTextRange();
+                    preCaretTextRange.moveToElementText(element);
+                    preCaretTextRange.setEndPoint("EndToStart", textRange);
+                    start = preCaretTextRange.text.length;
+                    preCaretTextRange.setEndPoint("EndToEnd", textRange);
+                    end = preCaretTextRange.text.length;
+                }
+                return { start: start, end: end };
+            },
+            getPositionInHTMLByTextCurr(html, text, start) {
+                let j = 0;
+                for (let i = 0; i < text.length; i++) {
+                    if (i < start) {
+                        const t = text[i];
+                        const h = html[j];
+                        if (t !== h) {
+                            start++;
+                            i--;
+                        }
+                        j++;
+                    }
+                }
+                return start;
+            },
             toBold() {
-                // const editableDiv = document.getElementById('editableDiv');
-                // const innerHtml = editableDiv.innerHTML;
-                // const innerText = editableDiv.innerText;
-                // const selected = window.getSelection().toString();
+                const editableDiv = document.getElementById('editableDiv');
+                const innerHtml = editableDiv.innerHTML;
+                console.log(innerHtml)
+                const innerText = editableDiv.innerText;
+                console.log(innerText)
+                const curr = this.getCaretCharacterOffsetWithin(editableDiv);
+                console.log(curr.start);
+                console.log(curr.end);
+                const sel = window.getSelection().toString();
+                const trueStart = this.getPositionInHTMLByTextCurr(innerHtml, innerText, curr.start);
+                const start = innerHtml.substring(0, trueStart);
+                console.log(start);
+                const end = innerHtml.substring(trueStart + sel.length);
+                console.log(end);
             },
             changeTextAlign(type) {
                 const editableDiv = document.getElementById('editableDiv');

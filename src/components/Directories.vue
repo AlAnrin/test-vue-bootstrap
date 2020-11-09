@@ -6,7 +6,7 @@
                     <b-button v-b-tooltip.hover title="Создать папку" @click="addPart">
                         <b-icon icon="folder-plus" aria-hidden="true"></b-icon>
                     </b-button>
-                    <b-button v-b-tooltip.hover title="Обновить папку" @click="refreshParts">
+                    <b-button v-b-tooltip.hover title="Обновить папки" @click="refreshParts">
                         <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
                     </b-button>
                 </b-button-group>
