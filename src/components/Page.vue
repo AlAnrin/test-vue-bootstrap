@@ -116,18 +116,18 @@
                 }
                 return { start: start, end: end };
             },
-            getPositionInHTMLByTextCurr(html, text, start) {
+            getPositionInHTMLByTextCurr(html, text, start, end) {
                 let j = 0;
                 const old = start;
+                const oldEnd = end;
                 for (let i = 0; i < text.length && j < html.length; i++) {
-                    if (i <= old && j <= start) {
-                        // if (text[i] === '\n') { //TODO: whyyyyyy
-                        //     if (html[j] === ' ' && text[i+1] !== ' ') {
-                        //         j++;
-                        //         // start++;
-                        //     }
-                        //     i++;
-                        // }
+                    if (i <= oldEnd && j <= end) {
+                        if (text[i] === '\n') {
+                            if (html[j] === ' ' && text[i+1] !== ' ') {
+                                j++;
+                            }
+                            i++;
+                        }
                         const t = text[i];
                         const h = html[j];
                         if (t !== h) {
@@ -139,10 +139,14 @@
                                     || html[j + 1] === 'u'
                                     || html[j + 1] === '/') {
                                     while (html[j] !== '>' && j < html.length) {
-                                        start++;
+                                        if (i < old)
+                                            start++;
+                                        end++;
                                         j++;
                                     }
-                                    start++;
+                                    if (i < old)
+                                        start++;
+                                    end++;
                                     j++;
                                     i--;
                                 }
@@ -150,92 +154,50 @@
                         } else j++;
                     }
                 }
-                return start;
+                return {start: start, end: end};
             },
             fixPositions() {
                 const editableDiv = document.getElementById('editableDiv');
                 const innerHtml = editableDiv.innerHTML;
                 const innerText = editableDiv.innerText.replace('\n', ' ');
                 const curr = this.getCaretCharacterOffsetWithin(editableDiv);
-                const sel = window.getSelection();
-                const selStr = sel.toString();
-                const trueStart = this.getPositionInHTMLByTextCurr(innerHtml, innerText, curr.start);
-                const start = innerHtml.substring(0, trueStart);
+                const trueCurr = this.getPositionInHTMLByTextCurr(innerHtml, innerText, curr.start, curr.end);
+                const start = innerHtml.substring(0, trueCurr.start);
                 console.log(start);
-                const end = innerHtml.substring(trueStart + selStr.length);
+                const end = innerHtml.substring(trueCurr.end);
                 console.log(end);
-                return {start, end, selStr};
+                const trueSel = innerHtml.substring(trueCurr.start, trueCurr.end);
+                return {start, end, trueSel};
             },
             toHistory() {
                 this.story.push(this.currentFile.content);
                 this.index++;
             },
-            checkOpenTag(str) {
-                const openTags = [];
-                for (let i = 0; i < str.length; i++) {
-                    if (str[i] === '<' && str[i+1] !== '/'){
-                        i++;
-                        let tag = '';
-                        while (str[i] !== '>' && i < str.length) {
-                            tag += str[i];
-                            i++;
-                        }
-                        openTags.push({
-                            tag: tag,
-                            i: i
-                        });
-                    }
-                    if (str[i] === '<' && str[i+1] === '/'){
-                        openTags.pop();
-                        i += 4;
-                    }
-                }
-                return openTags;
-            },
             toBold() {
-                let {start, end, selStr} = this.fixPositions();
-                // const openTags = this.checkOpenTag(start);
-                // let lasOpenTag;
-                // if (openTags.length !== 0 && openTags[openTags.length - 1].tag === 'b') {
-                //     lasOpenTag = openTags[openTags.length - 1];
-                //     if ((lasOpenTag.i + lasOpenTag.tag.length) === start.length) {
-                //         const arr = start.split('');
-                //         arr.length = arr.length - ( 2 + lasOpenTag.tag.length);
-                //         start = arr.join('')
-                //         end = `<${lasOpenTag.tag}>${end}`;
-                //     }
-                //     else {
-                //         start += '</' + lasOpenTag.tag + '>';
-                //         end = `<${lasOpenTag.tag}>${end}`;
-                //     }
-                // }
+                let {start, end, trueSel} = this.fixPositions();
                 this.toHistory();
-                // if (lasOpenTag) {
-                //     this.currentFile.content = start + selStr.trim() + end;
-                // }
-                // else
-                    this.currentFile.content = start + '<b>' + selStr + '</b>' + end;
+                this.currentFile.content = start + '<b>' + trueSel + '</b>' + end;
             },
             toItalic() {
-                const {start, end, selStr} = this.fixPositions();
+                const {start, end, trueSel} = this.fixPositions();
                 this.toHistory();
-                this.currentFile.content = start + '<i>' + selStr + '</i>' + end;
+                this.currentFile.content = start + '<i>' + trueSel + '</i>' + end;
             },
             toUnderline() {
-                const {start, end, selStr} = this.fixPositions();
+                const {start, end, trueSel} = this.fixPositions();
                 this.toHistory();
-                this.currentFile.content = start + '<u>' + selStr + '</u>' + end;
+                this.currentFile.content = start + '<u>' + trueSel + '</u>' + end;
             },
             toStrikethrough() {
-                const {start, end, selStr} = this.fixPositions();
+                const {start, end, trueSel} = this.fixPositions();
                 this.toHistory();
-                this.currentFile.content = start + '<s>' + selStr + '</s>' + end;
+                this.currentFile.content = start + '<s>' + trueSel + '</s>' + end;
             },
             changeTextAlign(type) {
-                const {start, end, selStr} = this.fixPositions();
+                const {start, end, trueSel} = this.fixPositions();
                 this.toHistory();
                 this.currentFile.content = '<div>' + start + '</div>' + `<div style="text-align: ${type}">`
-                    + selStr + '</div>' + '<div>' + end + '</div>';
+                    + trueSel + '</div>' + '<div>' + end + '</div>';
             }
         }
     }
