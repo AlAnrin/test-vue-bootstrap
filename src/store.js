@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        baseUrl: 'http://127.0.0.1:7000/api',
+        baseUrl: 'https://limitless-peak-06216.herokuapp.com/api',
+        // baseUrl: 'http://127.0.0.1:7000/api',
         token: null,
         fio: null,
         data: undefined,
