@@ -14,3 +14,7 @@ npm run serve
 ```
 npm run build
 ```
+## Watch on
+https://alanrin.github.io/test-vue-bootstrap/
+it's use free heroku, so, please, don't do many requests.
+login: user1, password: 1
